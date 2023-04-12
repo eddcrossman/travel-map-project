@@ -42,12 +42,13 @@ const initialLocations = [
 
 const ViewModel = function() {
     var self = this;
-    this.currentMap = ko.observable(new Map(initialMap));
     this.locationList = ko.observableArray([]);
 
     initialLocations.forEach(function(locationItem) {
         self.locationList.push( new Location(locationItem));
     });
+
+    this.currentMap = ko.observable(new Map(initialMap, this.locationList()));
 }
 
 const Location = function(data) {
@@ -56,21 +57,20 @@ const Location = function(data) {
     this.long = ko.observable(data.long);
 }
 
-const Map = function(data) {
-    this.lat = ko.observable(data.lat);
-    this.long = ko.observable(data.long);
-    this.height = ko.observable(data.height);
-    this.width = ko.observable(data.width);
-    this.params = ko.observable(data.params);
-
+const Map = function(mapData, locationData) {
     this.url = ko.computed(function(){
-        let url = googleURL + `${this.lat()},${this.long()}&size=${this.height()}x${this.width()}`;
+        let url = googleURL + `${mapData.lat},${mapData.long}&size=${mapData.height}x${mapData.width}`;
         
-        for (const i in data.params) {
-            url += `&${i}=${data.params[i]}`;
+        for (const i in mapData.params) {
+            url += `&${i}=${mapData.params[i]}`;
         }
 
-        url += `&markers=color:blue%7Csize:mid%7Clabel:T%7C19,73`
+        for (const i of locationData) {
+            const label = i.name().charAt(0);
+            console.log(label);
+            url += `&markers=color:red%7Csize:mid%7Clabel:${label}%7C${i.lat()},${i.long()}`
+        }
+
         url += `&key=${API_KEY}`
 
         return url;
