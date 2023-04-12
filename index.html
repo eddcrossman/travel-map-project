@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Travel Map - KO Project</title>
 </head>
 <body>
-    <div class="main" data-bind="with: currentMap">
-        <img class="map" src="" alt="" data-bind="attr: {src: url}">
+    <div class = "container">
+        <div class="main" data-bind="with: currentMap">
+            <img class="map" src="" alt="" data-bind="attr: {src: url}">
+        </div>
+        <div>
+            <ul data-bind="foreach: locationList">
+                <li data-bind="text: $data.name"></li>
+            </ul>
+        </div>
     </div>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/API.js"></script>
